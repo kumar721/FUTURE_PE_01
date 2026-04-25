@@ -2,7 +2,6 @@
  <html lang="en">
  <html lang="en">
  <head>
- <head>
     <meta charset="UTF-8">
   <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
@@ -39,6 +38,11 @@
 
             padding-bottom: 10px;
     .container {
+     <div style="margin-bottom: 20px;">
+    <button onclick="printDocument()">🖨 Print / Save PDF</button>
+    <button onclick="copyContent()">📋 Copy Content</button>
+    <button onclick="downloadText()">⬇ Download Text</button>
+</div>
         }
       width: 90%;
         h2 {
@@ -121,7 +125,8 @@
     </div>
   </header>
  
- 
+ <h2 id="overview">1. Project Overview</h2>
+<h2 id="services">4. Services Overview</h2>
     <div class="header">
   <section class="section">
         <p class="meta"><strong>Client:</strong> Lakmé Salon, Hyderabad</p>
@@ -276,7 +281,7 @@
   <footer>
     <p>© 2026 GlowCare Skin Clinic. All Rights Reserved.</p>
   </foot>
- 
-
+ <p class="meta"><strong>Date:</strong> <span id="current-date"></span></p>
+<script src="script.js"></script>
  </body>
  </html>
