@@ -1,58 +1,72 @@
+// ===== SET CURRENT DATE =====
 document.addEventListener("DOMContentLoaded", function () {
-
-  // Smooth scroll for button links
-  const buttons = document.querySelectorAll('a[href^="#"]');
-
-  buttons.forEach(button => {
-    button.addEventListener("click", function (e) {
-      e.preventDefault();
-
-      const targetId = this.getAttribute("href");
-      const targetSection = document.querySelector(targetId);
-
-      if (targetSection) {
-        targetSection.scrollIntoView({
-          behavior: "smooth"
+    const dateElement = document.getElementById("current-date");
+    if (dateElement) {
+        const today = new Date();
+        const formattedDate = today.toLocaleDateString("en-IN", {
+            day: "numeric",
+            month: "long",
+            year: "numeric"
         });
-      }
-    });
-  });
-
-  // Show alert when call button is clicked
-  const callButton = document.querySelector('.cta .btn');
-
-  if (callButton) {
-    callButton.addEventListener("click", function () {
-      alert("Thank you for choosing Alika The Salon! We will connect with you shortly.");
-    });
-  }
-
-  // Service card hover animation effect
-  const serviceCards = document.querySelectorAll(".service-card");
-
-  serviceCards.forEach(card => {
-    card.addEventListener("mouseenter", () => {
-      card.style.transform = "translateY(-10px) scale(1.03)";
-    });
-
-    card.addEventListener("mouseleave", () => {
-      card.style.transform = "translateY(0) scale(1)";
-    });
-  });
-
-  // Dynamic greeting based on time
-  const header = document.querySelector("header h1");
-
-  const hour = new Date().getHours();
-
-  if (header) {
-    if (hour < 12) {
-      header.innerText = "Good Morning! Feel Confident Every Time You Walk Out";
-    } else if (hour < 18) {
-      header.innerText = "Good Afternoon! Feel Confident Every Time You Walk Out";
-    } else {
-      header.innerText = "Good Evening! Feel Confident Every Time You Walk Out";
+        dateElement.textContent = formattedDate;
     }
-  }
-
 });
+
+// ===== PRINT / SAVE AS PDF =====
+function printDocument() {
+    window.print();
+}
+
+// ===== COPY DOCUMENT CONTENT =====
+function copyContent() {
+    const content = document.querySelector(".container").innerText;
+
+    navigator.clipboard.writeText(content)
+        .then(() => {
+            alert("Document copied to clipboard!");
+        })
+        .catch(() => {
+            alert("Failed to copy content.");
+        });
+}
+
+// ===== SCROLL TO SECTION =====
+function scrollToSection(id) {
+    const section = document.getElementById(id);
+    if (section) {
+        section.scrollIntoView({
+            behavior: "smooth"
+        });
+    }
+}
+
+// ===== ADD SIMPLE NAV HIGHLIGHT =====
+window.addEventListener("scroll", () => {
+    const sections = document.querySelectorAll("h2");
+    let current = "";
+
+    sections.forEach(section => {
+        const sectionTop = section.offsetTop - 100;
+        if (window.scrollY >= sectionTop) {
+            current = section.getAttribute("id");
+        }
+    });
+
+    document.querySelectorAll(".nav a").forEach(link => {
+        link.classList.remove("active");
+        if (link.getAttribute("href") === "#" + current) {
+            link.classList.add("active");
+        }
+    });
+});
+
+// ===== DOWNLOAD AS TEXT FILE =====
+function downloadText() {
+    const content = document.querySelector(".container").innerText;
+    const blob = new Blob([content], { type: "text/plain" });
+    const link = document.createElement("a");
+
+    link.href = URL.createObjectURL(blob);
+    link.download = "website-copy.txt";
+    link.click();
+}
