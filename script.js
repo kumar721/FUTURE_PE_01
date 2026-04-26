@@ -1,72 +1,79 @@
-// ===== SET CURRENT DATE =====
-document.addEventListener("DOMContentLoaded", function () {
-    const dateElement = document.getElementById("current-date");
-    if (dateElement) {
-        const today = new Date();
-        const formattedDate = today.toLocaleDateString("en-IN", {
-            day: "numeric",
-            month: "long",
-            year: "numeric"
-        });
-        dateElement.textContent = formattedDate;
-    }
+// Smooth scroll for internal links
+document.querySelectorAll('a[href^="#"]').forEach(anchor => {
+    anchor.addEventListener("click", function(e) {
+        e.preventDefault();
+        const target = document.querySelector(this.getAttribute("href"));
+        if (target) {
+            target.scrollIntoView({
+                behavior: "smooth"
+            });
+        }
+    });
 });
 
-// ===== PRINT / SAVE AS PDF =====
-function printDocument() {
-    window.print();
+
+// Simple booking button interaction
+const bookBtn = document.querySelector("button");
+
+if (bookBtn) {
+    bookBtn.addEventListener("click", () => {
+        alert("Thanks for choosing GlowNest Salon! Booking feature coming soon.");
+    });
 }
 
-// ===== COPY DOCUMENT CONTENT =====
-function copyContent() {
-    const content = document.querySelector(".container").innerText;
 
-    navigator.clipboard.writeText(content)
-        .then(() => {
-            alert("Document copied to clipboard!");
-        })
-        .catch(() => {
-            alert("Failed to copy content.");
-        });
-}
+// Fade-in animation on scroll
+const faders = document.querySelectorAll("section");
 
-// ===== SCROLL TO SECTION =====
-function scrollToSection(id) {
-    const section = document.getElementById(id);
-    if (section) {
-        section.scrollIntoView({
-            behavior: "smooth"
-        });
-    }
-}
+const appearOptions = {
+    threshold: 0.2
+};
 
-// ===== ADD SIMPLE NAV HIGHLIGHT =====
+const appearOnScroll = new IntersectionObserver(function(entries, observer) {
+    entries.forEach(entry => {
+        if (!entry.isIntersecting) return;
+
+        entry.target.style.opacity = 1;
+        entry.target.style.transform = "translateY(0)";
+        observer.unobserve(entry.target);
+    });
+}, appearOptions);
+
+faders.forEach(section => {
+    section.style.opacity = 0;
+    section.style.transform = "translateY(40px)";
+    section.style.transition = "all 0.6s ease-out";
+    appearOnScroll.observe(section);
+});
+
+
+// Sticky header effect
 window.addEventListener("scroll", () => {
-    const sections = document.querySelectorAll("h2");
-    let current = "";
-
-    sections.forEach(section => {
-        const sectionTop = section.offsetTop - 100;
-        if (window.scrollY >= sectionTop) {
-            current = section.getAttribute("id");
-        }
-    });
-
-    document.querySelectorAll(".nav a").forEach(link => {
-        link.classList.remove("active");
-        if (link.getAttribute("href") === "#" + current) {
-            link.classList.add("active");
-        }
-    });
+    const header = document.querySelector("header");
+    if (window.scrollY > 50) {
+        header.style.boxShadow = "0 2px 10px rgba(0,0,0,0.1)";
+    } else {
+        header.style.boxShadow = "none";
+    }
 });
 
-// ===== DOWNLOAD AS TEXT FILE =====
-function downloadText() {
-    const content = document.querySelector(".container").innerText;
-    const blob = new Blob([content], { type: "text/plain" });
-    const link = document.createElement("a");
 
-    link.href = URL.createObjectURL(blob);
-    link.download = "website-copy.txt";
-    link.click();
+// Dynamic greeting based on time
+const greeting = document.createElement("p");
+const hour = new Date().getHours();
+
+if (hour < 12) {
+    greeting.textContent = "Good morning! Ready for a fresh look?";
+} else if (hour < 18) {
+    greeting.textContent = "Good afternoon! Treat yourself today.";
+} else {
+    greeting.textContent = "Good evening! Relax and refresh with us.";
+}
+
+greeting.style.marginTop = "10px";
+greeting.style.fontWeight = "500";
+
+const header = document.querySelector("header");
+if (header) {
+    header.appendChild(greeting);
 }
